@@ -22,6 +22,7 @@ def remove_date_duplicates (data_frame):
     print("Найдено дубликатов по дате:" + str(data_frame.Date.duplicated().sum()))
     return (data_frame.drop_duplicates(subset = "Date", keep = 'last'))
  
+
    
 #Вывод: датафрейм с датой последнего отчета        
 
@@ -42,7 +43,6 @@ def get_today_report(df):
     
 
 #Закидывание гугл докс в дфы:
-
 #atmosfera
 gc = gspread.service_account(filename= 'C:\\Users\\Machine\\Downloads\\service_account.json')
 sh = gc.open_by_key("1dmIYf7OvHrJsh2HZ1S0LV6MS1h86N71CgqLMqunMxTs")
@@ -96,9 +96,10 @@ def start(message):
     btn6 = types.KeyboardButton("Все точки")
     btn7 = types.KeyboardButton("Frade")
     btn8 = types.KeyboardButton("Фан Чулан") 
-    markup.add(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8) 
+    btn9 = types.KeyboardButton("Общий отчет")
+    markup.add(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9) 
     bot.send_message(message.chat.id, "Выберете точку", reply_markup = markup)
-    #bot.send_message(message.chat.id, text = 'msg', reply_markup=markup )
+    
     bot.register_next_step_handler(message, start_reply) 
 
 def start_reply(message):
@@ -113,76 +114,98 @@ def start_reply(message):
 
         
     elif message.text == "Frade Мега":
-        if (message.text == "Frade Мега"):
-            k_b = types.ReplyKeyboardMarkup()
-            k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
-                        types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
-            
-            bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
-            bot.register_next_step_handler(message, dates_fradem)
+    
+        k_b = types.ReplyKeyboardMarkup()
+        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
+                    types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
+        
+        bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
+        bot.register_next_step_handler(message, dates_fradem)
         
     elif message.text == "Фан Чулан КМ":
-        if (message.text == "Фан Чулан КМ"):
-            k_b = types.ReplyKeyboardMarkup()
-            k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
-                        types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
-            
-            bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
-            bot.register_next_step_handler(message, dates_fchkm)
+    
+        k_b = types.ReplyKeyboardMarkup()
+        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
+                    types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
+        
+        bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
+        bot.register_next_step_handler(message, dates_fchkm)
             
     elif message.text == "Атмосфера":
-        if (message.text == "Атмосфера"):
-            k_b = types.ReplyKeyboardMarkup()
-            k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
-                        types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
-            
-            bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
-            bot.register_next_step_handler(message, dates_atmo)
+    
+        k_b = types.ReplyKeyboardMarkup()
+        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
+                    types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
+        
+        bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
+        bot.register_next_step_handler(message, dates_atmo)
             
     elif message.text == "Frade КМ":
-        if (message.text == "Frade КМ"):
-            k_b = types.ReplyKeyboardMarkup()
-            k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
-                        types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
-            
-            bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
-            bot.register_next_step_handler(message, dates_fradekm)
+    
+        k_b = types.ReplyKeyboardMarkup()
+        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
+                    types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
+        
+        bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
+        bot.register_next_step_handler(message, dates_fradekm)
             
     elif message.text == "Все точки":
-        if (message.text == "Все точки"):
-            k_b = types.ReplyKeyboardMarkup()
-            k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
-                        types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
-            
-            bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
-            bot.register_next_step_handler(message, dates_all)
+    
+        k_b = types.ReplyKeyboardMarkup()
+        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
+                    types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
+        
+        bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
+        bot.register_next_step_handler(message, dates_all)
             
     elif message.text == "Frade":
-        if (message.text == "Frade"):
-            k_b = types.ReplyKeyboardMarkup()
-            k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
-                        types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
-            
-            bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
-            bot.register_next_step_handler(message, dates_all_frade)
-            
-    elif message.text == "Фан Чулан":
-        if (message.text == "Фан Чулан"):
-            k_b = types.ReplyKeyboardMarkup()
-            k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
-                        types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
-            
-            bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
-            bot.register_next_step_handler(message, dates_all_fch)
+   
+        k_b = types.ReplyKeyboardMarkup()
+        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
+                    types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
         
+        bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
+        bot.register_next_step_handler(message, dates_all_frade)
+        
+    elif message.text == "Фан Чулан":
     
+        k_b = types.ReplyKeyboardMarkup()
+        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
+                    types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
+        
+        bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
+        bot.register_next_step_handler(message, dates_all_fch)
+        
+    elif message.text == "Общий отчет":
+        pass
                 
 
 
 def dates_fchm (message):
     if (message.text == "Последний отчёт"):
-        msg = fch_m_df.tail(1)[['Date', 'Name', 'MK_revenue', 'Sales_revenue', 'All_revenue']].to_string(index = False)
-        bot.send_message(message.chat.id, msg)
+        msg2 = ''
+        
+        msg = fch_m_df.tail(1)[['Date', 'Name','All_revenue', 'Rest_cash']].to_dict('list')
+        mk_money = int(fch_m_df.tail(1)['MK_revenue'])
+        all_money = int(fch_m_df.tail(1)['All_revenue'])
+        mk_percent = round (mk_money*100/all_money, 2)
+        msg['Date'] = msg.get('Date')[0].date()
+        msg['Date'] = msg.get('Date').strftime("%d-%m-%Y")
+        msg['MK_percent'] = mk_percent
+        keys = [*msg]
+        for i in range(len(keys)):
+            msg2 += str(keys[i])
+            msg2 += '/'  
+        msg2  += '\n'
+        msg2  += '\n'
+        for i in range(len(keys)):
+            msg2 += str(msg.get(keys[i]))
+            msg2 += '/' 
+            
+        msg2 = msg2.replace("'",'')
+        msg2 = msg2.replace (']', '')
+        msg2 = msg2.replace ('[', '')
+        bot.send_message(message.chat.id, msg2)
         
         
        
