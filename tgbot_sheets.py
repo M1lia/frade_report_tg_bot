@@ -26,18 +26,6 @@ def remove_date_duplicates (data_frame):
    
 #Вывод: датафрейм с датой последнего отчета        
 
-def get_today_report(df):
-    today = pd.Timestamp(datetime.date.today())
-    #today = pd.Timestamp(datetime.date.today() - datetime.timedelta(16))
-    df_wo_dups = remove_date_duplicates(df)
-    if df_wo_dups[df_wo_dups['Date'] == today].empty:
-                  return ('Сегодняшний отчет еще не загружен')
-    else:
-        
-        raw_data = df_wo_dups.loc[df['Date'] == today,['Date', 'Name', 'All_revenue',
-                                                                             'Client_number', 'Rest_cash', 'report_photo']]
-    raw_data['Date'] = raw_data['Date'].dt.date
-    return (raw_data)
 
 
     
@@ -79,11 +67,115 @@ raw_fch_m_df = raw_fch_m_df[raw_fch_m_df['Shop'] == 'ФЧ МЕГА']
 fch_m_df = remove_date_duplicates(raw_fch_m_df)
 
 
-shops_2df= {'atmosfera_df' : atmosfera_df, 'fchm_df' : None, 'fchkm_df' : None, 'fradem_df' : None, 'fradekm_df' : False}
-cols_df = {'atmosfera_df' : ['Date', 'Name', 'All_revenue','Rest_cash' ], 'fchm_df' : None, 'fchkm_df' : None, 'fradem_df' : None, 'fradekm_df' : False}
+
 
 bot = telebot.TeleBot("5278455211:AAFMeE_Y3ifxbILymO_WhmSpYGc0zrkquH8", parse_mode ='None') 
 
+#Через tail
+def last_report(df):
+    
+    if ('Revenue_rent' in df):
+        msg2 = ''
+        msg = df.tail(1)[[
+            'Date','Name','All_revenue', 'Rest_cash']].rename(columns = {
+                "Date":"Дата","Name":"Имя","All_revenue":"Выручка",
+                "Rest_cash":"В кассе", }) \
+        .to_dict('list')
+        mk_money = int(df.tail(1)['Revenue_rent'])
+        all_money = int(df.tail(1)['All_revenue'])
+        mk_percent = round (mk_money*100/all_money, 2)
+        msg['Дата'] = msg.get('Дата')[0].date()
+        msg['Дата'] = msg.get('Дата').strftime("%d-%m-%Y")
+        msg['% Аренда'] = mk_percent
+        keys = [*msg]
+        for i in range(len(keys)):
+            msg2 += str(keys[i])
+            msg2 += ' || '  
+        msg2  += '\n'
+        msg2  += '\n'
+        for i in range(len(keys)):
+            msg2 += str(msg.get(keys[i]))
+            if i < len(keys) - 1:
+                msg2 += ' || '
+            else:
+                msg2 += '%'
+            
+        msg2 = msg2.replace("'",'')
+        msg2 = msg2.replace (']', '')
+        msg2 = msg2.replace ('[', '')
+        return (msg2)
+    elif ('MK_revenue' in df):
+        msg2 = ''
+        msg = df.tail(1)[[
+            'Date','Name','All_revenue', 'Rest_cash']].rename(columns = {
+                "Date":"Дата","Name":"Имя","All_revenue":"Выручка",
+                "Rest_cash":"В кассе", }) \
+        .to_dict('list')
+        mk_money = int(df.tail(1)['MK_revenue'])
+        all_money = int(df.tail(1)['All_revenue'])
+        mk_percent = round (mk_money*100/all_money, 2)
+        msg['Дата'] = msg.get('Дата')[0].date()
+        msg['Дата'] = msg.get('Дата').strftime("%d-%m-%Y")
+        msg['% МК'] = mk_percent
+        keys = [*msg]
+        for i in range(len(keys)):
+            msg2 += str(keys[i])
+            msg2 += ' || '  
+        msg2  += '\n'
+        msg2  += '\n'
+        for i in range(len(keys)):
+            msg2 += str(msg.get(keys[i]))
+            if i < len(keys) - 1:
+                msg2 += ' || '
+            else:
+                msg2 += '%'
+            
+        msg2 = msg2.replace("'",'')
+        msg2 = msg2.replace (']', '')
+        msg2 = msg2.replace ('[', '')
+        return (msg2)
+    
+    elif (df.iloc[0]['Shop'] == 'Фраде МЕГА') or (df.iloc[0]['Shop'] == 'Фраде Молл'):
+        msg2 = ''
+        msg = df.tail(1)[[
+            'Date','Name','All_revenue', 'Rest_cash']].rename(columns = {
+                "Date":"Дата","Name":"Имя","All_revenue":"Выручка",
+                "Rest_cash":"В кассе", }) \
+        .to_dict('list')
+        
+        
+        msg['Дата'] = msg.get('Дата')[0].date()
+        msg['Дата'] = msg.get('Дата').strftime("%d-%m-%Y")
+        
+        keys = [*msg]
+        for i in range(len(keys)):
+            msg2 += str(keys[i])
+            msg2 += ' || '  
+        msg2  += '\n'
+        msg2  += '\n'
+        for i in range(len(keys)):
+            msg2 += str(msg.get(keys[i]))
+            
+            msg2 += ' || '
+            
+            
+        msg2 = msg2.replace("'",'')
+        msg2 = msg2.replace (']', '')
+        msg2 = msg2.replace ('[', '')
+        return (msg2)
+    
+def get_today_report(df):
+    today = pd.Timestamp(datetime.date.today())
+    #today = pd.Timestamp(datetime.date.today() - datetime.timedelta(16))
+    df_wo_dups = remove_date_duplicates(df)
+    if df_wo_dups[df_wo_dups['Date'] == today].empty:
+                  return ('Сегодняшний отчет еще не загружен')
+    else:
+        
+        raw_data = df_wo_dups.loc[df['Date'] == today,['Date', 'Name', 'All_revenue',
+                                                                             'Client_number', 'Rest_cash', 'report_photo']]
+    raw_data['Date'] = raw_data['Date'].dt.date
+    return (raw_data)    
 
 @bot.message_handler(commands=['start'])
 def start(message):     
@@ -105,8 +197,8 @@ def start(message):
 def start_reply(message):
     if (message.text == "Фан Чулан Мега"):
         k_b = types.ReplyKeyboardMarkup()
-        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Последние 10 дней"),
-                    types.KeyboardButton("Отчет по датам"), types.KeyboardButton("Отчет по месяцам"))
+        k_b.add(types.KeyboardButton("Последний отчёт"), types.KeyboardButton("Текущая неделя"),
+                    types.KeyboardButton("Текущий месяц"), types.KeyboardButton("Отчет по месяцам"))
         
         bot.send_message(message.chat.id, "Выберете дату", reply_markup = k_b)
         bot.register_next_step_handler(message, dates_fchm)
@@ -183,37 +275,21 @@ def start_reply(message):
 
 def dates_fchm (message):
     if (message.text == "Последний отчёт"):
-        msg2 = ''
-        
-        msg = fch_m_df.tail(1)[['Date', 'Name','All_revenue', 'Rest_cash']].to_dict('list')
-        mk_money = int(fch_m_df.tail(1)['MK_revenue'])
-        all_money = int(fch_m_df.tail(1)['All_revenue'])
-        mk_percent = round (mk_money*100/all_money, 2)
-        msg['Date'] = msg.get('Date')[0].date()
-        msg['Date'] = msg.get('Date').strftime("%d-%m-%Y")
-        msg['MK_percent'] = mk_percent
-        keys = [*msg]
-        for i in range(len(keys)):
-            msg2 += str(keys[i])
-            msg2 += '/'  
-        msg2  += '\n'
-        msg2  += '\n'
-        for i in range(len(keys)):
-            msg2 += str(msg.get(keys[i]))
-            msg2 += '/' 
-            
-        msg2 = msg2.replace("'",'')
-        msg2 = msg2.replace (']', '')
-        msg2 = msg2.replace ('[', '')
-        bot.send_message(message.chat.id, msg2)
+        msg = last_report(fch_m_df)
+        bot.send_message(message.chat.id, msg)
         
         
        
         
-    elif message.text == "Последние 10 дней":
-        if (message.text == "Последние 10 дней"):
-            msg = fch_m_df.tail(10)[['Date', 'Name', 'MK_revenue', 'Sales_revenue', 'All_revenue']].to_string(index = False, header = False)
-            #bot.send_photo(message.chat.id, fch_m_df.tail(10)[['All_revenue']].plot.bar())
+    elif message.text == "Текущая неделя":
+        today = pd.Timestamp.today()
+         
+        
+        
+        bot.send_message(message.chat.id, msg)
+        
+   
+        
         
     elif message.text == "Отчет по датам":
         pass
@@ -223,7 +299,8 @@ def dates_fchm (message):
 
 def dates_fchkm (message):
     if (message.text == "Последний отчёт"):
-        pass
+        msg = last_report(fch_km_df)
+        bot.send_message(message.chat.id, msg)
         
     elif message.text == "Последние 10 дней":
         pass
@@ -234,7 +311,12 @@ def dates_fchkm (message):
 
 def dates_all_fch (message):
     if (message.text == "Последний отчёт"):
-        pass
+        msg1 = last_report(fch_m_df)
+        msg2 = last_report(fch_km_df)
+        msg =   msg1[:msg1.find('\n')] + '\n' + 'MEGA' +msg1[msg1.find('\n')+1 :] + '\n' + 'KazanMall' \
+        + msg2[msg2.find('\n') + 1 :]
+        bot.send_message(message.chat.id, msg)
+        
         
     elif message.text == "Последние 10 дней":
         pass
@@ -245,7 +327,9 @@ def dates_all_fch (message):
 
 def dates_atmo (message):
     if (message.text == "Последний отчёт"):
-        pass
+        msg = last_report(atmosfera_df)
+        bot.send_message(message.chat.id, msg)
+        
         
     elif message.text == "Последние 10 дней":
         pass
@@ -256,7 +340,8 @@ def dates_atmo (message):
 
 def dates_fradem (message):
     if (message.text == "Последний отчёт"):
-        pass
+        msg = last_report(frade_m_df)
+        bot.send_message(message.chat.id, msg)
         
     elif message.text == "Последние 10 дней":
         pass
@@ -267,7 +352,8 @@ def dates_fradem (message):
 
 def dates_fradekm (message):
     if (message.text == "Последний отчёт"):
-        pass
+        msg = last_report(frade_km_df)
+        bot.send_message(message.chat.id, msg)
         
     elif message.text == "Последние 10 дней":
         pass
@@ -278,7 +364,11 @@ def dates_fradekm (message):
 
 def dates_all_frade (message):
     if (message.text == "Последний отчёт"):
-        pass
+        msg1 = last_report(frade_m_df)
+        msg2 = last_report(frade_km_df)
+        msg =   msg1[:msg1.find('\n')] + '\n' + 'MEGA' +msg1[msg1.find('\n')+1 :] + '\n' + 'KazanMall' \
+        + msg2[msg2.find('\n') + 1 :]
+        bot.send_message(message.chat.id, msg)
         
     elif message.text == "Последние 10 дней":
         pass
