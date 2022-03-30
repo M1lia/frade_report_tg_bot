@@ -17,6 +17,7 @@ import numpy as np
 def remove_date_duplicates (data_frame):
     #data_frame["Timestamp"] = pd.to_datetime(data_frame["Timestamp"], format  = "%d.%m.%Y %H:%M:%S", dayfirst= True)
     del data_frame['Timestamp']
+    #pd.to_datetime(data_frame["Date"],  dayfirst = True)
     data_frame["Date"] = pd.to_datetime(data_frame["Date"], format = "%d.%m.%Y", dayfirst = True)
     data_frame = data_frame.sort_values(by = "Date") 
     print("Найдено дубликатов по дате:" + str(data_frame.Date.duplicated().sum()))
@@ -277,13 +278,28 @@ def dates_fchm (message):
     if (message.text == "Последний отчёт"):
         msg = last_report(fch_m_df)
         bot.send_message(message.chat.id, msg)
-        
-        
        
-        
     elif message.text == "Текущая неделя":
         today = pd.Timestamp.today()
-         
+        #Для теста, лень подключать новые файлы.. Пока...
+        first_day = '2022-01-12'
+        last_day = '2022-01-21'             
+# =============================================================================
+#         first_day  = today - pd.Timedelta(days = int(today.weekday()))
+#         last_day = first_day + pd.Timedelta(days = 6)
+# =============================================================================
+        #curweek = pd.to_datetime(list(range(0,7)), unit = 'D', origin = first_day)
+        out_df = atmosfera_df.copy(deep = True)
+        
+        out_df = out_df.query("@first_day <= Date <= @last_day")
+        out_df['Date'] = out_df['Date'].apply(lambda x: x.strftime("%d-%m-%Y") )
+        
+        msg = out_df[[
+            'Date','Name','All_revenue', 'Rest_cash']].rename(columns = {
+                "Date":"Дата","Name":"Имя","All_revenue":"Выручка",
+                "Rest_cash":"В кассе", }) \
+        .to_dict('list')
+        
         
         
         bot.send_message(message.chat.id, msg)
