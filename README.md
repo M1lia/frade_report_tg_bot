@@ -6,3 +6,4 @@ TODO:
 - [x] Last day report
 - [ ] This week report
 - [ ] This month report 
+- [ ] authorization
