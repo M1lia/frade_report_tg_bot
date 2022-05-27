@@ -4,6 +4,6 @@ TODO:
 - [ ] Take away googlesheets connections to another file
 - [ ] Keep data in dictionaries
 - [x] Last day report
-- [ ] This week report
+- [x] Current week report
 - [ ] This month report 
 - [ ] authorization
