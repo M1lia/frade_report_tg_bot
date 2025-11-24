@@ -33,35 +33,29 @@ def remove_date_duplicates (data_frame):
 
 #Закидывание гугл докс в дфы:
 #atmosfera
-gc = gspread.service_account(filename= 'C:\\Users\\Machine\\Downloads\\service_account.json')
-sh = gc.open_by_key("1dmIYf7OvHrJsh2HZ1S0LV6MS1h86N71CgqLMqunMxTs")
+
 worksheet_atmosfera = sh.get_worksheet(0)
 df_raw_atmosfera = pd.DataFrame(worksheet_atmosfera.get_all_records())
 atmosfera_df = remove_date_duplicates(df_raw_atmosfera)
 #frade_km
-gc = gspread.service_account(filename= 'C:\\Users\\Machine\\Downloads\\service_account.json')
-sh = gc.open_by_key("1SJQIBfGM_sKGK_hgVPM3hzKx1s_fspjGa_9zHL7Y4Oc")
+
 worksheet_frade_km = sh.get_worksheet(0)
 df_raw_frade_km = pd.DataFrame(worksheet_frade_km.get_all_records())
 df_raw_frade_km = df_raw_frade_km[df_raw_frade_km['Shop'] == 'Фраде Молл']
 frade_km_df = remove_date_duplicates(df_raw_frade_km)
 #frade_m
-gc = gspread.service_account(filename= 'C:\\Users\\Machine\\Downloads\\service_account.json')
 sh = gc.open_by_key("1SJQIBfGM_sKGK_hgVPM3hzKx1s_fspjGa_9zHL7Y4Oc")
 worksheet_frade_km = sh.get_worksheet(0)
 df_raw_frade_m = pd.DataFrame(worksheet_frade_km.get_all_records())
 df_raw_frade_m = df_raw_frade_m[df_raw_frade_m['Shop'] == 'Фраде МЕГА']
 frade_m_df = remove_date_duplicates(df_raw_frade_m)
-#fchkm
-gc = gspread.service_account(filename= 'C:\\Users\\Machine\\Downloads\\service_account.json')
-sh = gc.open_by_key("1npr9dVInilatao23zQkyDW5NlobpQxYdi15USd7HOyE")
+
+
 worksheet_frade_km = sh.get_worksheet(0)
 df_raw_fch_km = pd.DataFrame(worksheet_frade_km.get_all_records())
 df_raw_fch_km = df_raw_fch_km[df_raw_fch_km['Shop'] == 'ФЧ МОЛЛ']
 fch_km_df = remove_date_duplicates(df_raw_fch_km)
 #fchm
-gc = gspread.service_account(filename= 'C:\\Users\\Machine\\Downloads\\service_account.json')
-sh = gc.open_by_key("1npr9dVInilatao23zQkyDW5NlobpQxYdi15USd7HOyE")
 worksheet_frade_km = sh.get_worksheet(0)
 raw_fch_m_df = pd.DataFrame(worksheet_frade_km.get_all_records())
 raw_fch_m_df = raw_fch_m_df[raw_fch_m_df['Shop'] == 'ФЧ МЕГА']
@@ -412,3 +406,4 @@ def dates_all (message):
     
 if __name__ == '__main__':
     bot.infinity_polling()
+
